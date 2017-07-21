@@ -8,40 +8,42 @@ import java.util.Map;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.file.fileheader.HeaderRow;
-import com.file.fileheader.Query;
-import com.file.fileheader.QueryParser;
+
+import com.stackroute.datamunger.CSVDataReader;
+import com.stackroute.datamunger.Header;
 
 public class TestCsv {
-	static Query query;
-	static QueryParser queryParser;
-	static HeaderRow headerRow;
-	static Map<String,Integer> expectedHeaders,actualHeaders ;
+	
+	static Header header;
+static Map<String,Integer> expectedHeaders,actualHeaders ;
 	static String queryString;
-
+static CSVDataReader cSVDataReader;
 	@BeforeClass
 	public static void intialise() throws Exception {
 
-		queryString = "select empid,empname from  d://emp.csv where empid=101 and empname='raju' order by empname";
 		
-		queryParser = new QueryParser();
+		queryString = "d://emp.csv";
+		
+		cSVDataReader=new CSVDataReader(queryString);
+		
 
-		query = queryParser.parseQuery(queryString);
-		headerRow = query.getHeaderRow(query);
+		//query = queryParser.parseQuery(queryString);
+		
 		
 		expectedHeaders = new LinkedHashMap<String,Integer>();
 	
 	        
 		actualHeaders = new LinkedHashMap<String,Integer>();
-		actualHeaders=headerRow.getFirstRow();
+		actualHeaders=cSVDataReader.getHeader();
 	}
 
 @Test
 	public void testHeaders() throws Exception {
-	expectedHeaders.put("empid",0);
-	expectedHeaders.put("empname",1);
-	expectedHeaders.put("empsal",2);
-	expectedHeaders.put("empdept",4);
+	expectedHeaders.put("EmpId",0);
+	expectedHeaders.put("Name",1);
+	expectedHeaders.put("City",2);
+	expectedHeaders.put("Salary",3);
+	expectedHeaders.put("Dept",4);
 		assertEquals("File Headers are correct",expectedHeaders,actualHeaders);
 
 	}
